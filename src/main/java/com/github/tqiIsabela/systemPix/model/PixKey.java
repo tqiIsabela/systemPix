@@ -15,6 +15,9 @@ public class PixKey {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
 
+    @Column(nullable = false)
+    private Long cpf;
+
     @Column
     private String email;
 
