@@ -8,7 +8,6 @@ import java.util.List;
 public interface PixTransactionRepository extends JpaRepository<PixTransaction, Long> {
     List<PixTransaction> findByCpf(Long cpf);
 
-    // Adicione outros métodos conforme necessário
 }
 
 

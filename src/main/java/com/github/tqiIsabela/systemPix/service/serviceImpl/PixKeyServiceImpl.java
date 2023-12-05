@@ -1,8 +1,10 @@
 package com.github.tqiIsabela.systemPix.service.serviceImpl;
 
 import com.github.tqiIsabela.systemPix.dto.PixKeyRequest;
+import com.github.tqiIsabela.systemPix.exception.PixKeyNotFoundException;
 import com.github.tqiIsabela.systemPix.model.PixKey;
 import com.github.tqiIsabela.systemPix.repository.PixKeyRepository;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,14 +38,26 @@ public class PixKeyServiceImpl implements PixKeyService {
 
     private String generateRandomKey() {
         int length = 10;
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-        StringBuilder randomKey = new StringBuilder();
+        boolean useLetters = true;
+        boolean useNumbers = false;
 
-        for (int i = 0; i < length; i++) {
-            int index = new Random().nextInt(characters.length());
-            randomKey.append(characters.charAt(index));
+        return RandomStringUtils.random(length, useLetters, useNumbers);
+    }
+
+    @Override
+    public void updatePixKey(PixKeyRequest pixKeyRequest) {
+        Optional<PixKey> existingPixKey = pixKeyRepository.findById(pixKeyRequest.getCpf());
+
+        if (existingPixKey.isPresent()) {
+            PixKey pixKey = existingPixKey.get();
+
+            pixKey.setEmail(pixKeyRequest.getEmail());
+            pixKey.setPhoneNumber(pixKeyRequest.getPhoneNumber());
+            pixKey.setAccountId(pixKeyRequest.getAccountId());
+
+            pixKeyRepository.save(pixKey);
+        } else {
+            throw  new PixKeyNotFoundException("Chave PIX não encontrada");
         }
-
-        return randomKey.toString();
     }
 }

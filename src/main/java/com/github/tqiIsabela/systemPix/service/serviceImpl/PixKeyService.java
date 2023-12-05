@@ -9,4 +9,6 @@ public interface PixKeyService {
     String createPixKey(PixKeyRequest pixKeyRequest);
 
     Optional<PixKey> findByCpf(Long cpf);
+
+    void updatePixKey(PixKeyRequest pixKeyRequest);
 }
