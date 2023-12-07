@@ -99,6 +99,21 @@ class PixKeyServiceImplTest {
         verify(pixKeyRepository, times(1)).findById(pixKeyRequest.getCpf());
         verify(pixKeyRepository, never()).save(any());
     }
+
+    @Test
+    public void testDeletePixKey() {
+        pixKeyService.deletePixKey(123L);
+
+        verify(pixKeyRepository, times(1)).deleteById(123L);
+    }
+
+    @Test
+    public void testDeletePixKeyNotFound() {
+        assertThrows(PixKeyNotFoundException.class, () -> pixKeyService.deletePixKey(456L));
+        verify(pixKeyRepository, never()).deleteById(456L);
+    }
+
+
 }
 
 

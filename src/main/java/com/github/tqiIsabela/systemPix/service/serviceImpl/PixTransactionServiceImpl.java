@@ -15,50 +15,60 @@ import java.util.List;
 @Service
 public class PixTransactionServiceImpl implements PixTransactionService {
 
-    @Autowired
-    private PixTransactionRepository transactionRepository;
+    private final UserRepository userRepository;
+    private final AccountBalanceRepository balanceRepository;
+    private final PixTransactionRepository transactionRepository;
 
     @Autowired
-    private AccountBalanceRepository balanceRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    public PixTransactionServiceImpl(
+            UserRepository userRepository,
+            AccountBalanceRepository balanceRepository,
+            PixTransactionRepository transactionRepository) {
+        this.userRepository = userRepository;
+        this.balanceRepository = balanceRepository;
+        this.transactionRepository = transactionRepository;
+    }
 
     @Override
     public PixTransaction sendPix(Long senderCpf, Long receiverCpf, double amount, String keyType) {
         User sender = userRepository.findByCpf(senderCpf);
         User receiver = userRepository.findByCpf(receiverCpf);
 
+
         validateTransaction(sender, amount);
+
 
         double senderBalance = balanceRepository.findBalanceByCpf(senderCpf);
         double newSenderBalance = senderBalance - amount;
+
 
         if (newSenderBalance < 0) {
             throw new InsufficientBalanceException("Saldo insuficiente para realizar a transação.");
         }
 
+
         PixTransaction senderTransaction = createTransaction(sender, amount, PixTransaction.TipoOperacao.ENVIADO);
         transactionRepository.save(senderTransaction);
 
+
         balanceRepository.updateBalance(senderCpf, newSenderBalance);
+
 
         PixTransaction receiverTransaction = createTransaction(receiver, amount, PixTransaction.TipoOperacao.RECEBIDO);
         transactionRepository.save(receiverTransaction);
+
 
         double receiverBalance = balanceRepository.findBalanceByCpf(receiverCpf);
         double newReceiverBalance = receiverBalance + amount;
         balanceRepository.updateBalance(receiverCpf, newReceiverBalance);
 
+
         return senderTransaction;
     }
 
-
     @Override
     public List<PixTransaction> getTransactionsByCpf(Long cpf) {
-        // método para obter transações por CPF
-
-        return null;
+        return transactionRepository.findByCpf(cpf);
     }
 
     private PixTransaction createTransaction(User user, double amount, PixTransaction.TipoOperacao operationType) {
@@ -69,18 +79,15 @@ public class PixTransactionServiceImpl implements PixTransactionService {
         transaction.setDataHoraTransacao(LocalDateTime.now());
         transaction.setBanco("Banco Exemplo");
         transaction.setTipoOperacao(operationType);
-
         transaction.setChave("CHAVE_EXEMPLO");
 
         return transaction;
     }
 
     private void validateTransaction(User user, double amount) {
-
         if (amount <= 0) {
             throw new IllegalArgumentException("O valor da transação deve ser positivo.");
         }
-
     }
 }
 

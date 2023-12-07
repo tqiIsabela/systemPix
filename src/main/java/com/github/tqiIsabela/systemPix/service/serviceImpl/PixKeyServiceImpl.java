@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.Random;
 
 @Service
 public class PixKeyServiceImpl implements PixKeyService {
@@ -58,6 +57,17 @@ public class PixKeyServiceImpl implements PixKeyService {
             pixKeyRepository.save(pixKey);
         } else {
             throw  new PixKeyNotFoundException("Chave PIX não encontrada");
+        }
+    }
+
+    @Override
+    public void deletePixKey(Long cpf) {
+        Optional<PixKey> existingPixKey = pixKeyRepository.findById(cpf);
+
+        if (existingPixKey.isPresent()) {
+            pixKeyRepository.deleteById(cpf);
+        } else {
+            throw new PixKeyNotFoundException("Chave pix não encontrada");
         }
     }
 }

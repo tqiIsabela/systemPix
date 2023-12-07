@@ -11,7 +11,6 @@ public interface AccountBalanceRepository extends JpaRepository<AccountBalance, 
     @Query("UPDATE AccountBalance SET saldo = :newBalance WHERE cpf = :cpf")
     void updateBalance(Long cpf, double newBalance);
 
-    // Adicione outros métodos conforme necessário
 }
 
 

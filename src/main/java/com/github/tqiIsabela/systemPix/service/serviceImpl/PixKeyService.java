@@ -11,4 +11,6 @@ public interface PixKeyService {
     Optional<PixKey> findByCpf(Long cpf);
 
     void updatePixKey(PixKeyRequest pixKeyRequest);
+
+    void deletePixKey(Long cpf);
 }

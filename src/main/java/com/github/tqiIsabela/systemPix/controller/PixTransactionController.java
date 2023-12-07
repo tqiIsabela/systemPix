@@ -2,15 +2,16 @@ package com.github.tqiIsabela.systemPix.controller;
 
 import com.github.tqiIsabela.systemPix.dto.PixTransactionRequest;
 import com.github.tqiIsabela.systemPix.exception.InsufficientBalanceException;
+import com.github.tqiIsabela.systemPix.model.PixKey;
 import com.github.tqiIsabela.systemPix.model.PixTransaction;
 import com.github.tqiIsabela.systemPix.service.serviceImpl.PixTransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/pix")
@@ -36,4 +37,11 @@ public class PixTransactionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao processar transação.");
         }
     }
+
+    @GetMapping("/transactions/{cpf}")
+    public  ResponseEntity<List<PixTransaction>> getTransactionsByCpf(@PathVariable Long cpf) {
+        List<PixTransaction> transactions = pixTransactionService.getTransactionsByCpf(cpf);
+        return ResponseEntity.ok(transactions);
+    }
+
 }

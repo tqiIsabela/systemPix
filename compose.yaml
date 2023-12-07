@@ -1,1 +1,13 @@
+version: '3'
 services:
+  oracle:
+    image: oracleinanutshell/oracle-xe-11g:latest
+    volumes:
+      - oracle-data:/opt/oracle/oradata
+    environment:
+      ORACLE_PWD: 4110Isabela
+      ORACLE_SID: mydb
+      ORACLE_PDB: mypdb
+      ORACLE_CHARACTERSET: AL32UTF8
+volumes:
+  oracle-data:
