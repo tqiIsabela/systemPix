@@ -1,13 +1,25 @@
-version: '3'
+version: '3.8'
+
 services:
-  oracle:
-    image: oracleinanutshell/oracle-xe-11g:latest
-    volumes:
-      - oracle-data:/opt/oracle/oradata
+  systempix_db:
+    image: 'mysql:8.1'
+    container_name: systempix_db
+    restart: always
     environment:
-      ORACLE_PWD: 4110Isabela
-      ORACLE_SID: mydb
-      ORACLE_PDB: mypdb
-      ORACLE_CHARACTERSET: AL32UTF8
+      - MYSQL_DATABASE=mydb
+      - MYSQL_USER=mydb
+      - MYSQL_PASSWORD=4110Isabela
+      - MYSQL_ROOT_PASSWORD=4110Isabela
+    networks:
+      - systempix
+    volumes:
+      - systempix:/var/lib/systempix
+    ports:
+      - 3307:3306
+
+networks:
+  systempix:
+    driver: bridge
+
 volumes:
-  oracle-data:
+  systempix:

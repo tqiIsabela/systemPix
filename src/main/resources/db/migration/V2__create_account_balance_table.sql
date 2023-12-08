@@ -1,7 +1,7 @@
 -- Criação da tabela de saldo de conta
 CREATE TABLE account_balance (
-    id NUMERIC PRIMARY KEY AUTO_INCREMENT,
-    cpf NUMERIC(11,0) PRIMARY KEY, -- A chave primária é o CPF
-    saldo DOUBLE NOT NULL,
-    FOREIGN KEY (cpf) REFERENCES pix_transaction(cpf)
+   id BIGINT AUTO_INCREMENT PRIMARY KEY,
+   cpf BIGINT UNIQUE NOT NULL,
+   saldo DOUBLE NOT NULL,
+   FOREIGN KEY (cpf) REFERENCES pix_transaction(cpf)
 );
